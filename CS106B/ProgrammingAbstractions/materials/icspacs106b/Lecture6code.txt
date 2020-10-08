@@ -1,0 +1,66 @@
+/*
+ *  File: lecture.cpp
+ *  ------------------
+ * Snippets from the live coding part of Wed 1/23 lecture
+ * showing use of CS106 class library.
+ */
+
+#include "genlib.h"
+#include <iostream>
+#include <fstream>
+#include "map.h"
+#include "random.h"
+#include "set.h"
+
+void ReadFile(ifstream &in, Map<int> &m)
+{
+	while (true) {
+		string word;
+		in >> word;
+		if (in.fail()) break;
+		if (m.containsKey(word)) 
+			m[word]++;
+		else
+			m[word] = 1;
+	}
+	Map<int>::Iterator itr = m.iterator();
+	string max;
+	int maxCount = 0;
+	while (itr.hasNext()) {
+		string key = itr.next();
+		if (m[key] > maxCount) {
+			max = key;
+			maxCount = m[key];
+		}
+	}
+	cout << "Max is " << max << " = " << maxCount << endl;
+}
+
+void TestRandom()
+{
+	Set<int> seen;
+	while (true) {
+		int num = RandomInteger(1, 100);
+		if (seen.contains(num)) break;
+		seen.add(num);
+	}
+	Set<int>::Iterator itr = seen.iterator();
+	while (itr.hasNext()) 
+		cout << itr.next() << endl;
+}
+
+int main()
+{
+	ifstream in("handout.txt");
+	Map<int> counts;
+	ReadFile(in, counts);
+	Randomize();
+	TestRandom();
+	return 0;
+}
+
+
+
+
+
+

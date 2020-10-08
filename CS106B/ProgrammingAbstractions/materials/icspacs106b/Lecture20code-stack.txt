@@ -1,0 +1,90 @@
+/*
+ *  File: mystack.h
+ *  ----------------
+ *
+ *  Created by Julie Zelenski on 2/27/08.
+ *
+ */
+#ifndef _mystack_h
+#define _mystack_h
+
+#include "genlib.h"
+#include "vector.h"
+
+template <typename ElemType>
+class MyStack
+{
+ public:
+	MyStack();
+	~MyStack();
+	
+	bool isEmpty();
+	void push(ElemType e);
+	ElemType pop();
+	
+  private:
+	struct cellT {
+		ElemType val;
+		cellT *next;
+	};
+	
+	cellT * head;
+
+};
+
+#include "mystack.cpp"
+
+
+#endif
+
+/*
+ *  File: mystack.cpp
+ *  ------------------
+ *
+ *  Created by Julie Zelenski on 2/27/08.
+ *
+ */
+
+#include "mystack.h"
+
+template <typename ElemType>
+MyStack<ElemType>::MyStack()
+{	
+	head = NULL;
+}
+
+template <typename ElemType>
+MyStack<ElemType>::~MyStack()
+{
+	// delete the entire list
+}
+
+
+template <typename ElemType>
+bool MyStack<ElemType>::isEmpty()
+{
+	return (head == NULL);
+}
+
+
+template <typename ElemType>
+void MyStack<ElemType>::push(ElemType s)
+{
+	cellT *newCell = new cellT;
+	newCell->val = s;
+	newCell->next = head;
+	head = newCell;
+}
+
+template <typename ElemType>
+ElemType MyStack<ElemType>::pop()
+{
+	if (isEmpty()) Error("pop empty stack");
+	ElemType top = head->val;
+	cellT *old = head;
+	head = head->next;
+	delete old;
+	return top;
+}
+
+

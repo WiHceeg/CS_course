@@ -1,0 +1,76 @@
+/*
+ *  File: mystack.h
+ *  ----------------
+ *
+ *  Created by Julie Zelenski on 2/25/08.
+ *
+ */
+#ifndef _mystack_h
+#define _mystack_h
+
+#include "genlib.h"
+#include "vector.h"
+
+template <typename ElemType>
+class MyStack
+{
+ public:
+	MyStack();
+	~MyStack();
+	
+	int size();
+	void push(ElemType e);
+	ElemType pop();
+	
+  private:
+	Vector<ElemType> elems;
+
+};
+
+#include "mystack.cpp"
+
+
+#endif
+
+/*
+ *  File: mystack.cpp
+ *  ------------------
+ *
+ *  Created by Julie Zelenski on 2/25/08.
+ *
+ */
+
+#include "mystack.h"
+
+template <typename ElemType>
+MyStack<ElemType>::MyStack()
+{	
+}
+
+template <typename ElemType>
+MyStack<ElemType>::~MyStack()
+{
+}
+
+
+template <typename ElemType>
+int MyStack<ElemType>::size()
+{
+	return elems.size();
+}
+
+template <typename ElemType>
+ElemType MyStack<ElemType>::pop()
+{
+	if (size() == 0) Error("pop empty stack");
+	ElemType top = elems[elems.size()-1];
+	elems.removeAt(elems.size()-1);
+	return top;
+}
+
+
+template <typename ElemType>
+void MyStack<ElemType>::push(ElemType s)
+{
+	elems.add(s);
+}

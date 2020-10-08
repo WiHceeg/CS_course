@@ -1,0 +1,94 @@
+/*
+ *  File: mymap.h
+ *  ----------------
+ *
+ *  Created by Julie Zelenski on 2/29/08.
+ *
+ */
+#ifndef _mymap_h
+#define _mymap_h
+
+#include "genlib.h"
+#include "disallowcopy.h"
+#include "vector.h"
+
+template <typename ValType>
+class MyMap
+{
+ public:
+	MyMap();
+	~MyMap();
+	
+	void add(string key, ValType val);
+	ValType getValue(string key);
+	
+  private:
+	struct pairT {
+		string key;
+		ValType val;
+	};
+	Vector<pairT> entries;
+	int findIndexForKey(string key);
+
+	// this prevents default memberwise copy of map objects
+	DISALLOW_COPYING(MyMap);
+};
+
+// #include .cpp because of template (quirky)
+#include "mymap.cpp"
+
+
+#endif
+
+/*
+ *  File: mymap.cpp
+ *  ------------------
+ *
+ *  Created by Julie Zelenski on 2/29/08.
+ *
+ */
+
+#include "mymap.h"
+
+template <typename ValType>
+MyMap<ValType>::MyMap()
+{	
+}
+
+template <typename ValType>
+MyMap<ValType>::~MyMap()
+{
+}
+
+template <typename ValType>
+ValType MyMap<ValType>::getValue(string key)
+{
+	int found = findIndexForKey(key);
+	if (found != -1)
+		return entries[found].val;
+	Error("key not found!");
+}
+
+template <typename ValType>
+void MyMap<ValType>::add(string key, ValType val)
+{
+	pairT p;
+	int found = findIndexForKey(key);
+	if (found != -1) {
+		entries[found].val = val;
+	} else {
+		p.key = key;
+		p.val = val;
+		entries.add(p);
+	}
+}
+
+
+template <typename ValType>
+int MyMap<ValType>::findIndexForKey(string key)
+{
+	for (int i = 0; i < entries.size(); i++)
+		if (entries[i].key == key) return i;
+	return -1;
+}
+

@@ -1,0 +1,74 @@
+/*
+ *  File: lecture.cpp
+ *  ------------------
+ * Snippets from the live coding part of Fri 1/25 lecture
+ */
+
+#include "genlib.h"
+#include <iostream>
+#include <fstream>
+#include "map.h"
+#include "set.h"
+#include "simpio.h"
+
+void Swap(char &ch1, char &ch2)
+{
+	char tmp = ch1;
+	ch1 = ch2;
+	ch2 = tmp;
+}
+string Signature(string s)
+{
+	s = ConvertToLowerCase(s);
+	for (int i = 0; i < s.length(); i++) {
+		int minIndex = i;
+		for (int j = i+1; j < s.length(); j++)
+			if (s[j] < s[minIndex]) minIndex = j;
+		Swap(s[i], s[minIndex]);
+	}
+	return s;
+}
+
+
+string MaxKey(Map<Set<string> > &m)
+{
+	Map<Set<string> >::Iterator itr = m.iterator();
+	int maxSize = 0;
+	string maxKey;
+	while (itr.hasNext()) {
+		string key = itr.next();
+		if (m[key].size() > maxSize) {
+			maxKey = key;
+			maxSize = m[key].size();
+		}
+	}
+	return maxKey;
+}
+void ReadFile(ifstream &in, Map<Set<string> > &m)
+{
+	while (true) {
+		string word;
+		in >> word;
+		if (in.fail()) break;
+		m[Signature(word)].add(word);
+	}
+	cout << "Num signatures = " << m.size()<< endl;
+	string maxSig = MaxKey(m);
+	Set<string>::Iterator it = m[maxSig].iterator();
+	while (it.hasNext())
+		cout << it.next() << endl;
+}
+
+
+
+int main()
+{
+	ifstream in("ospd2.txt");
+	Map<Set<string> > m;
+	ReadFile(in, m);
+	return 0;
+}
+
+
+
+

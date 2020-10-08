@@ -1,0 +1,117 @@
+/*
+ *  File: mymap.h
+ *  ----------------
+ *
+ *  Created by Julie Zelenski on 3/7/08.
+ *
+ */
+#ifndef _mymap_h
+#define _mymap_h
+
+#include "genlib.h"
+#include "disallowcopy.h"
+#include "vector.h"
+
+template <typename ValType>
+class MyMap
+{
+ public:
+	MyMap();
+	~MyMap();
+	
+	void add(string key, ValType val);
+	ValType getValue(string key);
+	
+  private:
+	static const int NumBuckets = 99;
+	
+	struct cellT {
+		string key;
+		ValType val;
+		cellT *next;
+	};
+	
+	cellT *buckets[NumBuckets];
+	
+	int hash(string key, int numBuckets);
+	cellT *findCellForKey(string key, cellT *head);
+
+	// this prevents default memberwise copy of map objects
+	DISALLOW_COPYING(MyMap);
+};
+
+// #include .cpp because of template (quirky)
+#include "mymap.cpp"
+
+
+#endif
+
+/*
+ *  File: mymap.cpp
+ *  ------------------
+ *
+ *  Created by Julie Zelenski on 3/7/08.
+ *
+ */
+
+#include "mymap.h"
+
+template <typename ValType>
+MyMap<ValType>::MyMap()
+{	
+	for (int i = 0; i < NumBuckets; i++)
+		buckets[i] = NULL;
+}
+
+template <typename ValType>
+MyMap<ValType>::~MyMap()
+{
+	// delete all bucket chains
+}
+
+template <typename ValType>
+ValType MyMap<ValType>::getValue(string key)
+{
+	int whichBucket = hash(key, NumBuckets);
+	cellT *match = findCellForKey(key, buckets[whichBucket]);
+	if (match != NULL)
+		return match->val;
+	Error("key not found!");
+}
+
+template <typename ValType>
+void MyMap<ValType>::add(string key, ValType val)
+{
+	int whichBucket = hash(key, NumBuckets);
+	cellT *match = findCellForKey(key, buckets[whichBucket]);
+	if (match != NULL) {
+		match->val = val;
+	} else {
+		cellT *newOne = new cellT;
+		newOne->key = key;
+		newOne->val = val;
+		newOne->next = buckets[whichBucket];
+		buckets[whichBucket] = newOne;
+	}
+}
+
+template <typename ValType>
+typename MyMap<ValType>::cellT *MyMap<ValType>::findCellForKey(string key, cellT *head)
+{
+	for (cellT *cur = head; cur != NULL; cur = cur->next)
+		if (cur->key == key) return cur;
+	return NULL;
+}
+
+
+const long Multiplier = -1664117991L;
+
+template <typename ValType>
+  int MyMap<ValType>::hash(string s, int nBuckets)
+  {
+    unsigned long hashcode = 0;
+    for (int i = 0; i < s.length(); i++) {
+       hashcode = hashcode * Multiplier + s[i];
+    }
+    return (hashcode % nBuckets);
+  }

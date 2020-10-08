@@ -1,0 +1,42 @@
+/*
+ *  File: lecture.cpp
+ *  ------------------
+ * Snippets from the live coding part of Monday 1/14 lecture
+ * showing some simple string manipulation.
+ */
+
+#include "genlib.h"
+#include <iostream>
+
+/* My first version takes string by value and creates
+ * and returns a new string containing only the
+ * non-matching characters, built up using
+ * concatenation.
+ */
+string RemoveOccurrences1(char ch, string s)
+{
+	string result;
+	for (int i = 0; i < s.length(); i++)
+		if (s[i] != ch) result += s[i];
+	return result;
+}
+
+/* My second version takes string by references
+ * and edits it in-place to remove the characters
+ * that match the target.
+ */
+void RemoveOccurrences2(char ch, string &s)
+{
+	int found = 0;
+	while ((found = s.find(ch, found)) != string::npos)
+		s.erase(found, 1);
+}
+
+int main()
+{
+	string myString = "chihuahuas cheese crackers";
+	string without = RemoveOccurrences1('c', myString);
+	RemoveOccurrences2('c', myString);
+	cout << without << " " << myString << endl;
+	return 0;
+}

@@ -1,0 +1,95 @@
+/*
+ *  File: myvector.h
+ *  ----------------
+ *
+ *  Created by Julie Zelenski on 2/22/08.
+ *
+ */
+#ifndef _myvector_h
+#define _myvector_h
+
+#include "genlib.h"
+
+template <typename ElemType>
+class MyVector
+{
+ public:
+	MyVector();
+	~MyVector();
+	
+	int size();
+	void add(ElemType s);
+	ElemType getAt(int index);
+	
+  private:
+	ElemType *arr;
+	int numUsed, numAllocated;
+	void doubleCapacity();
+
+};
+
+#include "myvector.cpp"	// this is ONLY done for template classes
+
+
+#endif
+
+/*
+ *  File: myvector.cpp
+ *  ------------------
+ *
+ *  Created by Julie Zelenski on 2/22/08.
+ *
+ */
+
+#include "myvector.h"
+
+template <typename ElemType>
+MyVector<ElemType>::MyVector()
+{	
+	arr = new ElemType[2];
+	numAllocated = 2;
+	numUsed = 0;
+}
+
+template <typename ElemType>
+MyVector<ElemType>::~MyVector()
+{
+	delete[] arr;
+}
+
+
+template <typename ElemType>
+int MyVector<ElemType>::size()
+{
+	return numUsed;
+}
+
+template <typename ElemType>
+ElemType MyVector<ElemType>::getAt(int index)
+{
+	if (index < 0 || index >= size())
+		Error("Out of bounds");
+	return arr[index];
+}
+
+template <typename ElemType>
+void MyVector<ElemType>::add(ElemType s)
+{
+	if (numUsed == numAllocated)
+		doubleCapacity();
+	arr[numUsed++] = s;
+}
+
+template <typename ElemType>
+void MyVector<ElemType>::doubleCapacity()
+{
+	ElemType *bigger = new ElemType[numAllocated*2];
+	for (int i = 0; i < numUsed; i++)
+		bigger[i] = arr[i];
+	delete[] arr;
+	arr = bigger;
+	numAllocated*= 2;
+}
+
+
+

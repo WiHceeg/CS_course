@@ -1,0 +1,91 @@
+/*
+ *  File: myqueue.h
+ *  ----------------
+ *
+ *  Created by Julie Zelenski on 2/27/08.
+ *
+ */
+#ifndef _myqueue_h
+#define _myqueue_h
+
+#include "genlib.h"
+
+template <typename ElemType>
+class MyQueue
+{
+ public:
+	MyQueue();
+	~MyQueue();
+	
+	bool isEmpty();
+	void enqueue(ElemType e);
+	ElemType dequeue();
+	
+  private:
+	struct cellT {
+		ElemType val;
+		cellT *next;
+	};
+	
+	cellT *head, *tail;
+
+};
+
+#include "myqueue.cpp"
+
+#endif
+
+/*
+ *  File: myqueue.cpp
+ *  ------------------
+ *
+ *  Created by Julie Zelenski on 2/27/08.
+ *
+ */
+
+#include "myqueue.h"
+
+template <typename ElemType>
+MyQueue<ElemType>::MyQueue()
+{	
+	head = tail = NULL;
+}
+
+template <typename ElemType>
+MyQueue<ElemType>::~MyQueue()
+{
+	// delete all cells
+}
+
+
+template <typename ElemType>
+bool MyQueue<ElemType>::isEmpty()
+{	
+	return (head == NULL);
+}
+
+template <typename ElemType>
+ElemType MyQueue<ElemType>::dequeue()
+{
+	if (isEmpty()) Error("dequeue empty q");
+	ElemType front = head->val;
+	cellT *old = head;
+	head = head->next;
+	delete old;
+	return front;
+}
+
+
+template <typename ElemType>
+void MyQueue<ElemType>::enqueue(ElemType s)
+{
+	cellT *newCell = new cellT;
+	newCell->val = s;
+	newCell->next = NULL;
+	if (isEmpty()) {
+		head = tail = newCell;
+	} else {
+		tail->next = newCell;
+		tail = newCell;
+	}
+}

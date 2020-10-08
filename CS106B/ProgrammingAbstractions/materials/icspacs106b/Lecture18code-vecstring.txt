@@ -1,0 +1,86 @@
+/*
+ *  File: myvector.h
+ *  ----------------
+ *
+ *  Created by Julie Zelenski on 2/22/08.
+ *
+ */
+#ifndef _myvector_h
+#define _myvector_h
+
+#include "genlib.h"
+
+class MyVector
+{
+ public:
+	MyVector();
+	~MyVector();
+	
+	int size();
+	void add(string s);
+	string getAt(int index);
+	
+  private:
+	string *arr;
+	int numUsed, numAllocated;
+	void doubleCapacity();
+
+};
+
+
+#endif
+
+/*
+ *  File: myvector.cpp
+ *  ------------------
+ *
+ *  Created by Julie Zelenski on 2/22/08.
+ *
+ */
+
+#include "myvector.h"
+
+MyVector::MyVector()
+{	
+	arr = new string[2];
+	numAllocated = 2;
+	numUsed = 0;
+}
+
+MyVector::~MyVector()
+{
+	delete[] arr;
+}
+
+
+int MyVector::size()
+{
+	return numUsed;
+}
+
+string MyVector::getAt(int index)
+{
+	if (index < 0 || index >= size())
+		Error("Out of bounds");
+	return arr[index];
+}
+
+void MyVector::add(string s)
+{
+	if (numUsed == numAllocated)
+		doubleCapacity();
+	arr[numUsed++] = s;
+}
+
+void MyVector::doubleCapacity()
+{
+	string *bigger = new string[numAllocated*2];
+	for (int i = 0; i < numUsed; i++)
+		bigger[i] = arr[i];
+	delete[] arr;
+	arr = bigger;
+	numAllocated*= 2;
+}
+
+
+
